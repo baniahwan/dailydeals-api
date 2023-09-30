@@ -21,7 +21,7 @@ app.use(bodyParser.json())
 
 
 app.get('/', (req, res) => {
-  response(200, "Ini data", "ini message", res)
+  response(200, "Ini data", "Ini adalah API daily deals. (backend capstone projek section palembang group 3", res)
 })
 
 // Get all menu
@@ -71,6 +71,39 @@ app.post('/register', (req, res) => {
     }
   });
 });
+
+// post user (untuk login)
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  
+  // Enkripsi password yang diinputkan oleh pengguna untuk mencocokkan dengan yang ada di database
+  const md5 = crypto.createHash('md5');
+  const encryptedPassword = md5.update(password).digest('hex');
+
+  const sql = `SELECT * FROM user WHERE email = "${username}" AND password = "${encryptedPassword}"`;
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      response(500, "invalid", "error", res);
+    } else {
+      if (results.length === 1) {
+        const user = results[0];
+        // Jika ada hasil yang cocok, Anda dapat mengizinkan pengguna masuk
+        const data = {
+          isSuccess: true,
+          id: user.id,
+          username: user.username,
+          email: user.email,
+        };
+        response(200, data, "Login Successful", res);
+      } else {
+        // Jika tidak ada hasil yang cocok, Anda dapat memberi tahu pengguna bahwa login gagal
+        response(401, "invalid", "Login Failed", res);
+      }
+    }
+  });
+});
+
 
 
 app.put('/menu', (req, res) => {
