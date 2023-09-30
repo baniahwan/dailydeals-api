@@ -22,13 +22,13 @@ app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
   response(200, "Ini data", `Ini adalah API daily deals. (backend capstone projek section palembang group 3.
-    Gunakan /menu untuk get all menu.
-    Gunakan /menu/burger untuk get menu by ketegori burger
-    Gunakan /menu/sandwich untuk get menu by ketegori sandwich
-    Gunakan /menu/dessertAndDrink untuk get menu by ketegori dessert & drink
-    Gunakan /menu/sides untuk get menu by ketegori sides
-    Gunakan /register untuk register (post)
-    Gunakan /login untuk login (post)`, res)
+    Gunakan /menu untuk get all menu. \n
+    Gunakan /menu/burger untuk get menu by ketegori burger. \n
+    Gunakan /menu/sandwich untuk get menu by ketegori sandwich. \n
+    Gunakan /menu/dessertAndDrink untuk get menu by ketegori dessert & drink. \n
+    Gunakan /menu/sides untuk get menu by ketegori sides. \n
+    Gunakan /register untuk register (post).\n
+    Gunakan /login untuk login (post).`, res)
 })
 
 // Get all menu
