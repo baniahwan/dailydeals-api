@@ -4,6 +4,7 @@ const port = 3001
 const bodyParser = require('body-parser')
 const db = require('./connection.js')
 const response = require('./response.js')
+const crypto = require('crypto')
 
 
 // Middleware untuk mengizinkan CORS (Cross-Origin Resource Sharing)
@@ -51,22 +52,25 @@ app.get('/user', (req, res) => {
   })
 })
 
+// Post user (untuk register)
+app.post('/register', (req, res) => {
+  const { username, email, password } = req.body;
+  // Enkripsi password menggunakan MD5
+  const md5 = crypto.createHash('md5');
+  const encryptedPassword = md5.update(password).digest('hex');
 
-// Post user
-app.post('/user', (req, res) => {
-  const { username, email, password } = req.body
-  const sql = `INSERT INTO user (username, email, password) VALUES ("${username}", "${email}", "${password}")`
+  const sql = `INSERT INTO user (username, email, password) VALUES ("${username}", "${email}", "${encryptedPassword}")`;
   db.query(sql, (err, fields) => {
-    if (err) response(500, "invalid", "error", res)
+    if (err) response(500, "invalid", "error", res);
     if (fields?.affectedRows){
       const data = {
         isSuccess: fields.affectedRows,
         id: fields.insertID,
-      }
-      response(200, data, "Data Added Succes", res)
+      };
+      response(200, data, "Data Added Succes", res);
     }
-  })
-})
+  });
+});
 
 
 app.put('/menu', (req, res) => {
@@ -107,3 +111,5 @@ app.delete('/menu', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+// const sql = `INSERT INTO user (username, email, password) VALUES ("${username}", "${email}", "CryptoJS.MD5(${password})")`
