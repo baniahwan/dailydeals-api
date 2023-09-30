@@ -80,7 +80,7 @@ app.post('/login', (req, res) => {
   const md5 = crypto.createHash('md5');
   const encryptedPassword = md5.update(password).digest('hex');
 
-  const sql = `SELECT * FROM user WHERE email = "${username}" AND password = "${encryptedPassword}"`;
+  const sql = `SELECT * FROM user WHERE username = "${username}" AND password = "${encryptedPassword}"`;
   
   db.query(sql, (err, results) => {
     if (err) {
