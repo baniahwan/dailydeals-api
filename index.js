@@ -95,7 +95,7 @@ app.post('/login', (req, res) => {
     } else {
       if (results.length === 1) {
         const user = results[0];
-        // Jika ada hasil yang cocok, Anda dapat mengizinkan pengguna masuk
+        // Jika ada hasil yang cocok, maka akan mengizinkan pengguna masuk
         const data = {
           isSuccess: true,
           id: user.id,
@@ -104,7 +104,7 @@ app.post('/login', (req, res) => {
         };
         response(200, data, "Login Successful", res);
       } else {
-        // Jika tidak ada hasil yang cocok, Anda dapat memberi tahu pengguna bahwa login gagal
+        // Jika tidak ada hasil yang cocok, maka akan memberi tahu pengguna bahwa login gagal
         response(401, "invalid", "Login Failed", res);
       }
     }
