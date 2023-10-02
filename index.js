@@ -69,9 +69,9 @@ app.post('/register', (req, res) => {
   const sql = `INSERT INTO user (username, email, password) VALUES ("${username}", "${email}", "${encryptedPassword}")`;
   db.query(sql, (err, fields) => {
     if (err) response(500, "invalid", "error", res);
-    if (fields?.affectedRows){
+    if (fields?.affectedRows>0){
       const data = {
-        isSuccess: fields.affectedRows,
+        isSuccess: fields.true,
         id: fields.insertID,
       };
       response(200, data, "Data Added Succes", res);
