@@ -11,6 +11,7 @@ const crypto = require('crypto')
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
+  res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5501');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
@@ -107,6 +108,24 @@ app.post('/login', (req, res) => {
         // Jika tidak ada hasil yang cocok, maka akan memberi tahu pengguna bahwa login gagal
         response(401, "invalid", "Login Failed", res);
       }
+    }
+  });
+});
+
+
+// Route untuk menambahkan data ke tabel "keranjang"
+app.post('/keranjang', (req, res) => {
+  const { jumlah, total_harga, id_menu, id_user, tanggal } = req.body;
+
+  const sql = 'INSERT INTO keranjang (jumlah, total_harga, id_menu, id_user, tanggal) VALUES (?, ?, ?, ?, ?)';
+  const values = [jumlah, total_harga, id_menu, id_user, tanggal];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Error inserting data into keranjang:', err);
+      res.status(500).json({ message: 'Internal server error' });
+    } else {
+      res.status(200).json({ message: 'Data added to keranjang successfully' });
     }
   });
 });
