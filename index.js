@@ -1,10 +1,12 @@
 const express = require('express')
+const cors = require('cors');
 const app = express()
 const port = 3001
 const bodyParser = require('body-parser')
 const db = require('./connection.js')
 const response = require('./response.js')
 const crypto = require('crypto')
+
 
 
 // Middleware untuk mengizinkan CORS (Cross-Origin Resource Sharing)
@@ -16,6 +18,9 @@ app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
+app.use(cors({
+  origin: 'http://127.0.0.1:5501',
+}));
 
 
 app.use(bodyParser.json())
