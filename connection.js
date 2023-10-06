@@ -1,10 +1,10 @@
 const mysql = require('mysql')
 
 const db = mysql.createConnection({
-    host: "sql12.freesqldatabase.com",
-    user: "sql12649840",
-    password: "xy9iyTMuqQ",
-    database: "sql12649840",
+    host: "b9b9aottiooh6egdqsku-mysql.services.clever-cloud.com",
+    user: "uqpbwhwstmid9izt",
+    password: "A1Q3wKffeK3viigreLip",
+    database: "b9b9aottiooh6egdqsku",
     port: 3306
 })
 

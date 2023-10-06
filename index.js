@@ -179,6 +179,52 @@ app.delete('/deleteitemcart', (req, res) => {
 })
 
 
+//CHECKOUT
+//UNTUK MENAMBAHKAN DATA CHECKOUT
+app.post('/checkout', (req, res) => {
+  const { jumlah_item, total_harga, payment_method, alamat, id_user } = req.body;
+
+  const sql = `INSERT INTO checkout (jumlah_item, total_harga, payment_method, alamat, id_user) VALUES (${jumlah_item}, ${total_harga}, '${payment_method}', '${alamat}', ${id_user})`;
+  const values = [jumlah_item, total_harga, payment_method, alamat, id_user];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Error inserting data into checkout', err);
+      res.status(500).json({ message: 'Internal server error' });
+    } else {
+      res.status(200).json({ message: 'Data added to checkout successfully' });
+    }
+  });
+});
+
+// UNTUK MENAMPILKAN SEMUA DATA DARI TABEL checkout DENGAN ID USER
+app.get('/checkout/user/:id_user', (req, res) => {
+  const id_user = req.params.id_user;
+  const sql = `SELECT user.username AS user_username,
+                      menu.nama AS menu_nama,
+                      keranjang.jumlah_item AS jumlah_item_diKeranjang,
+                      keranjang.total_harga AS total_harga_diKeranjang,
+                      checkout.payment_method AS checkout_payment_method,
+                      checkout.alamat AS checkout_alamat,
+                      checkout.id_user AS checkout_id_user
+                FROM checkout
+                      JOIN keranjang ON checkout.id_user = keranjang.id_user
+                      JOIN menu ON keranjang.id_menu = menu.id_menu
+                      JOIN user ON checkout.id_user = user.id_user
+                WHERE checkout.id_user = ${id_user}`;
+    
+  db.query(sql, (err, fields) => {
+    if (err) {
+      console.error('Error fetching data from database:', err);
+      res.status(500).json({ message: 'Internal server error' });
+    } else {
+      res.status(200).json({ data: fields, message: 'Data checkout by id_user retrieved successfully' });
+    }
+  });
+});
+
+
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
