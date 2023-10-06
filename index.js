@@ -223,6 +223,22 @@ app.get('/checkout/user/:id_user', (req, res) => {
   });
 });
 
+// UNTUK DELETE DATA CHECKOUT
+app.delete('/deletecheckout', (req, res) => {
+  const { id } = req.body
+  const sql = `DELETE FROM checkout WHERE id=${id}`
+  db.query(sql, (err, fields) => {
+    if (err) response(500, "invalid", "error", res)
+    if (fields.affectedRows > 0){
+      const data = {
+        isDeleted: true,
+      }
+      response(200, data, "Deleted data on checkout succes", res)
+    } else {
+      response(404, "data on checkout not found", "error", res)
+    }
+  })
+})
 
 
 app.listen(port, () => {
