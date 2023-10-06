@@ -192,7 +192,7 @@ app.post('/checkout', (req, res) => {
       console.error('Error inserting data into checkout', err);
       res.status(500).json({ message: 'Internal server error' });
     } else {
-      res.status(200).json({ message: 'Data added to checkout successfully' });
+      res.status(200).json({ message: 'Payment Succes And Data added to checkout successfully' });
     }
   });
 });
