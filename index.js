@@ -105,7 +105,7 @@ app.post('/login', (req, res) => {
         // Jika ada hasil yang cocok, maka akan mengizinkan pengguna masuk
         const data = {
           isSuccess: true,
-          id: user.id,
+          id: user.id_user,
           username: user.username,
           email: user.email,
         };
