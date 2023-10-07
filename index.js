@@ -11,15 +11,14 @@ const crypto = require('crypto')
 // Middleware untuk mengizinkan CORS (Cross-Origin Resource Sharing)
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
   res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5501');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
-app.use(cors({
-  origin: 'http://127.0.0.1:5501',
-}));
+// app.use(cors({
+//   origin: 'http://127.0.0.1:5501',
+// }));
 
 app.use(bodyParser.json())
 
@@ -226,21 +225,23 @@ app.get('/checkout/user/:id_user', (req, res) => {
 });
 
 // UNTUK DELETE DATA CHECKOUT
-app.delete('/deletecheckout', (req, res) => {
-  const { id } = req.body
+app.delete('/deletecheckout/:id', (req, res) => {
+  const { id } = req.params
   const sql = `DELETE FROM checkout WHERE id=${id}`
-  db.query(sql, (err, fields) => {
-    if (err) response(500, "invalid", "error", res)
-    if (fields.affectedRows > 0){
+  
+  db.query(sql, (err, result) => {
+    if (err) {
+      res.status(500).json({ message: "Error", error: err })
+    } else if (result.affectedRows > 0) {
       const data = {
         isDeleted: true,
-      }
-      response(200, data, "Deleted data on checkout succes", res)
+      };
+      res.status(200).json({ data, message: "Deleted data checkout success" });
     } else {
-      response(404, "data on checkout not found", "error", res)
+      res.status(404).json({ message: "data checkout not found" });
     }
-  })
-})
+  });
+});
 
 
 app.listen(port, () => {
