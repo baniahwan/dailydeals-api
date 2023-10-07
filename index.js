@@ -192,11 +192,11 @@ app.delete("/deleteitemcart/:id_keranjang", (req, res) => {
 //CHECKOUT
 //UNTUK MENAMBAHKAN DATA CHECKOUT
 app.post("/checkout", (req, res) => {
-  const { jumlah_item, total_harga, payment_method, alamat, id_user } =
+  const { payment_method, alamat, id_user } =
     req.body;
 
-  const sql = `INSERT INTO checkout (jumlah_item, total_harga, payment_method, alamat, id_user) VALUES (${jumlah_item}, ${total_harga}, '${payment_method}', '${alamat}', ${id_user})`;
-  const values = [jumlah_item, total_harga, payment_method, alamat, id_user];
+  const sql = `INSERT INTO checkout (payment_method, alamat, id_user) VALUES ('${payment_method}', '${alamat}', ${id_user})`;
+  const values = [payment_method, alamat, id_user];
 
   db.query(sql, values, (err, result) => {
     if (err) {
@@ -232,27 +232,36 @@ app.post("/checkout", (req, res) => {
 app.get("/checkout/user/:id_user", (req, res) => {
   const id_user = req.params.id_user;
   const sql = `SELECT user.username AS user_username,
-                      menu.nama AS menu_nama,
-                      checkout_item.jumlah_item AS jumlah_item_diKeranjang,
-                      checkout_item.total_harga AS total_harga_diKeranjang,
+                      SUM(checkout_item.jumlah_item) AS jumlah_item_diKeranjang,
+                      SUM(checkout_item.total_harga) AS total_harga_diKeranjang,
                       checkout.payment_method AS checkout_payment_method,
                       checkout.alamat AS checkout_alamat,
-                      checkout.id_user AS checkout_id_user
-                FROM checkout_item
-                      JOIN checkout ON checkout.id = checkout_item.checkout_id
-                      JOIN menu ON checkout_item.id_menu = menu.id_menu
+                      checkout.id
+                FROM checkout
+                      JOIN checkout_item ON checkout.id = checkout_item.checkout_id
                       JOIN user ON checkout.id_user = user.id_user
-                WHERE checkout.id_user = ${id_user}`;
+                WHERE checkout.id_user = ${id_user} order by checkout.tanggal desc limit 1`;
 
   db.query(sql, (err, fields) => {
     if (err) {
       console.error("Error fetching data from database:", err);
       res.status(500).json({ message: "Internal server error" });
     } else {
-      res.status(200).json({
-        data: fields,
-        message: "Data checkout by id_user retrieved successfully",
-      });
+      const sqlDetails = `select checkout_item.jumlah_item, checkout_item.total_harga, menu.nama from checkout_item inner join menu on menu.id_menu = checkout_item.id_menu where checkout_item.checkout_id = ?`;
+      db.query(sqlDetails, [fields[0]['id']], (err1, fields2) => {
+        if (err1) {
+          res.status(500).json({ message: "Internal server error" });
+        } else {
+          const data = { 
+            ...fields[0],
+            details: fields2
+           } 
+          res.status(200).json({
+            data,
+            message: "Data checkout by id_user retrieved successfully",
+          });
+        }
+      })
     }
   });
 });
