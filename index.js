@@ -162,21 +162,23 @@ app.get('/keranjang/user/:id_user', (req, res) => {
 });
 
 // UNTUK MENGHAPUS DATA MENU DARI KERANJANG (dengan id keranjang)
-app.delete('/deleteitemcart', (req, res) => {
-  const { id } = req.body
-  const sql = `DELETE FROM keranjang WHERE id=${id}`
-  db.query(sql, (err, fields) => {
-    if (err) response(500, "invalid", "error", res)
-    if (fields.affectedRows > 0){
+app.delete('/deleteitemcart/:id_keranjang', (req, res) => {
+  const { id_keranjang } = req.params
+  const sql = `DELETE FROM keranjang WHERE id_keranjang=${id_keranjang}`
+  
+  db.query(sql, (err, result) => {
+    if (err) {
+      res.status(500).json({ message: "Error", error: err })
+    } else if (result.affectedRows > 0) {
       const data = {
         isDeleted: true,
-      }
-      response(200, data, "Deleted menu on cart succes", res)
+      };
+      res.status(200).json({ data, message: "Deleted menu on cart success" });
     } else {
-      response(404, "menu on cart not found", "error", res)
+      res.status(404).json({ message: "Menu on cart not found" });
     }
-  })
-})
+  });
+});
 
 
 //CHECKOUT
