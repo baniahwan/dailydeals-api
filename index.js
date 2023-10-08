@@ -232,8 +232,6 @@ app.post("/checkout", (req, res) => {
 app.get("/checkout/user/:id_user", (req, res) => {
   const id_user = req.params.id_user;
   const sql = `SELECT user.username AS user_username,
-                      SUM(checkout_item.jumlah_item) AS jumlah_item_diKeranjang,
-                      SUM(checkout_item.total_harga) AS total_harga_diKeranjang,
                       checkout.payment_method AS checkout_payment_method,
                       checkout.alamat AS checkout_alamat,
                       checkout.id
