@@ -11,6 +11,7 @@ const crypto = require("crypto");
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5501");
+  res.setHeader("Access-Control-Allow-Origin", "https://kampus-merdeka-software-engineering.github.io");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.setHeader(
     "Access-Control-Allow-Headers",
